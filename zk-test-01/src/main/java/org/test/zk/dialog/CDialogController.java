@@ -81,6 +81,7 @@ public class CDialogController extends SelectorComposer<Component> {
         catch ( Exception e ) {
             
             e.printStackTrace();
+            
         }
        
      }
