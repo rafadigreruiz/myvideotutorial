@@ -8,9 +8,9 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 
 public class CDialogController extends SelectorComposer<Component> {
@@ -18,6 +18,9 @@ public class CDialogController extends SelectorComposer<Component> {
     private static final long serialVersionUID = -8977563222707532143L;
     
     protected ListModelList<String> dataModel = new ListModelList<String>();
+    
+    @Wire
+    Window windowPerson;
     
     @Wire
     Label labelId;
@@ -85,16 +88,22 @@ public class CDialogController extends SelectorComposer<Component> {
     @Listen( "onClick=#buttonAccept" )
     public void onClickButtonAceptar( Event event ) {
         
-        Messagebox.show( "ID=" + textboxId.getValue() + " firstName=" + textboxFirstName.getValue() + " LastName=" + textboxLastName.getValue() + " comment=" + textboxComment.getValue(), "Aceptar", Messagebox.OK, Messagebox.INFORMATION );
+        //Messagebox.show( "ID=" + textboxId.getValue() + " firstName=" + textboxFirstName.getValue() + " LastName=" + textboxLastName.getValue() + " comment=" + textboxComment.getValue(), "Aceptar", Messagebox.OK, Messagebox.INFORMATION );
+        
         //System.out.println( "Hello Accept" );
+        
+        windowPerson.detach();
         
     }
     
     @Listen( "onClick=#buttonCancel" )
     public void onClickButtonCancelar( Event event ) {
         
-        Messagebox.show( "Cancelar", "Cancelar", Messagebox.OK, Messagebox.EXCLAMATION );
+        //Messagebox.show( "Cancelar", "Cancelar", Messagebox.OK, Messagebox.EXCLAMATION );
+        
         //System.out.println( "Hello Cancel" );
+        
+        windowPerson.detach();
         
     }
     
