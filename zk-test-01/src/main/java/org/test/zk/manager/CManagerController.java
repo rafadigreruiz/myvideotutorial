@@ -7,7 +7,7 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zul.Window;
 
-
+//Clase ManagerController
 public class CManagerController extends SelectorComposer<Component> {
 
     private static final long serialVersionUID = -1591648938821366036L;
