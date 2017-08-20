@@ -88,7 +88,7 @@ public class CDialogController extends SelectorComposer<Component> {
             
             final Execution execution = Executions.getCurrent();
             
-          //Recibimos la persona a modificar y la guardamos en la variable de la clase
+            //Recibimos la persona a modificar y la guardamos en la variable de la clase
             personToModify = (CPerson) execution.getArg().get( "personToModify" );
             
             //Cuando se esta creando una nueva persona, no hay personToModify. Es igual a nulo. Debemos verificar esto
@@ -167,6 +167,9 @@ public class CDialogController extends SelectorComposer<Component> {
             personToAdd.setGender( selectboxGender.getSelectedIndex() );
             personToAdd.setBirthDate( new java.sql.Date( dateboxBirdDate.getValue().getTime() ).toLocalDate() );
             personToAdd.setComment( textboxComment.getValue() );
+            
+            //Lanzamos el evento, retornando la persona a agregar
+            Events.echoEvent( new Event ( "onDialogFinished", callerComponent, personToAdd ) ); //Suma importancia que los nombres de los eventos coincidan
             
         }
         
