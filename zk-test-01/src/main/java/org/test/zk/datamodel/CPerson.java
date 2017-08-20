@@ -1,4 +1,4 @@
-package org.test.zk.dao;
+package org.test.zk.datamodel;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.test.zk.dao.CPerson;
+import org.test.zk.database.CDatabaseConnection;
+import org.test.zk.datamodel.CPerson;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -107,10 +108,15 @@ public class CManagerController extends SelectorComposer<Component> {
     Listbox listboxPersons;
     
     @Wire
+    Button buttonConnectionToDB;
+    
+    @Wire
     Button buttonAdd;
     
     @Wire
     Button buttonModify;
+    
+    protected CDatabaseConnection databaseConnection = null;
     
     //Constructor
     @Override
@@ -144,6 +150,55 @@ public class CManagerController extends SelectorComposer<Component> {
         catch ( Exception e ) {
             
             e.printStackTrace();
+        }
+        
+    }
+
+    @Listen( "onClick=#buttonConnectionToDB" )
+    public void onClickbuttonConnectionToDB( Event event ) {
+        
+        if ( buttonConnectionToDB.getLabel().equalsIgnoreCase( "Connect" ) ) {
+            
+            databaseConnection = new CDatabaseConnection();
+            
+            if ( databaseConnection.makeConnectionToDatabase() ) {
+                
+                buttonConnectionToDB.setLabel( "Disconnect" );
+                
+                Messagebox.show( "Conexión exitosa" );
+                
+            }
+            else {
+                
+                Messagebox.show( "Conexión fallida" );
+                
+            }
+            
+        }
+        else {
+            
+            if ( databaseConnection != null ) {
+                
+               if ( databaseConnection.closeConnectionToDatabase() ) {
+                   
+                   buttonConnectionToDB.setLabel( "Connect" );
+                   
+                   Messagebox.show( "Conexión cerrada" ); 
+                   
+               }
+               else {
+                   
+                   Messagebox.show( "Falla al cerrar conexión" ); 
+                   
+               }
+                
+            }
+            else {
+                
+                Messagebox.show( "¡No estás conectado!" ); 
+                
+            }
+            
         }
         
     }
@@ -295,11 +350,14 @@ public class CManagerController extends SelectorComposer<Component> {
             System.out.println( person.getBirthDate() );
            
             //Forma 1
-            dataModel.set( dataModel.indexOf( dataModel.getSelection().iterator().next() ), person );
+            dataModel.notifyChange( person ); //Decirle al modelo que este elemento ha cambiado y que lo modifique en la lista Listbox
+            
+            //Forma 2
+            //dataModel.set( dataModel.indexOf( dataModel.getSelection().iterator().next() ), person );
             
         }
         
-        //Forma 2
+        //Forma 3
         //listboxPersons.setModel( ( (ListModelList<?>) null ) ); //El null confunde a eclipse y el tipo a ser usado
         //listboxPersons.setModel( dataModel );
         
