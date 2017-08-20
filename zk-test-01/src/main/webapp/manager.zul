@@ -3,15 +3,18 @@
 
   <window apply="org.test.zk.manager.CManagerController" title="Person manager" border="normal" hflex="min">
   
-    <vlayout width="443px">
+    <vlayout width="552px">
     
       <listbox id="listboxPersons" width="100%" height="300px">
       
         <listhead sizable="true">
         
-          <listheader label="Id"/>
-          <listheader label="Nombres"/>
-          <listheader label="Apellidos"/>
+          <listheader label="Id" width="100px"/>
+          <listheader label="Nombres" width="100px"/>
+          <listheader label="Apellidos" width="100px"/>
+          <listheader label="Género" width="100px"/>
+          <listheader label="Fecha de nacimiento" width="150px"/>
+          <listheader label="Comentario" width="250px"/>
           
         </listhead>
       
