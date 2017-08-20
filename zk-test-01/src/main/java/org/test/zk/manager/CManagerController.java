@@ -12,6 +12,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
@@ -105,6 +106,12 @@ public class CManagerController extends SelectorComposer<Component> {
     @Wire
     Listbox listboxPersons;
     
+    @Wire
+    Button buttonAdd;
+    
+    @Wire
+    Button buttonModify;
+    
     //Constructor
     @Override
     public void doAfterCompose( Component comp ) {
@@ -144,9 +151,11 @@ public class CManagerController extends SelectorComposer<Component> {
     @Listen( "onClick=#buttonAdd" )
     public void onClickbuttonAdd( Event event ) {
         
-        //Map arg = new HashMap();
-        //arg.put("someName", someValue);
-        Window win = ( Window ) Executions.createComponents( "/dialog.zul", null, null ); //attach to page as root if parent is null
+        //Primero pasamos la referencia el buttonAdd
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put( "callerComponent", listboxPersons );
+        Window win = ( Window ) Executions.createComponents( "/dialog.zul", null, params ); //attach to page as root if parent is null
         
         win.doModal();
     }
@@ -237,6 +246,30 @@ public class CManagerController extends SelectorComposer<Component> {
             Messagebox.show( "No hay selección" );
             
         }
+        
+    }
+    
+    @Listen( "onDialogFinished=#listboxPersons" )
+    public void onDialogFinishedbuttonAdd( Event event ) {
+    
+       //Este evento recibe el controlador del dialog.zul 
+        
+        System.out.println( "Evento recibido" );
+        
+        //La clase event tiene un metodo .getData()
+        
+        if ( event.getData() != null ) {
+            
+            CPerson person = (CPerson) event.getData(); //Otra vez el typecast
+            
+            System.out.println( person.getId() );
+            System.out.println( person.getFirstName() );
+            System.out.println( person.getLastName() );
+            System.out.println( person.getGender() );
+            System.out.println( person.getBirthDate() );
+            
+        }
+        
     }
     
 }

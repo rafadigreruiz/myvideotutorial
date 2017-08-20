@@ -26,6 +26,11 @@ public class CPerson implements Serializable {
         
     }
     
+    //Constructor
+    public CPerson() {
+        
+    }
+    
     public String getId() {
         
         return strId;

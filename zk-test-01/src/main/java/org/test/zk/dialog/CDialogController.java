@@ -5,6 +5,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -21,6 +22,12 @@ public class CDialogController extends SelectorComposer<Component> {
     private static final long serialVersionUID = -8977563222707532143L;
     
     protected ListModelList<String> dataModel = new ListModelList<String>();
+    
+    protected Component callerComponent = null; //Variable de clase de tipo protegida
+    
+    protected CPerson personToModify = null; //Guarda la persona a ser modificada
+    
+    protected CPerson personToAdd = null; //Guarda la persona a ser agregada
     
     @Wire
     Window windowPerson;
@@ -81,26 +88,37 @@ public class CDialogController extends SelectorComposer<Component> {
             
             final Execution execution = Executions.getCurrent();
             
-            CPerson personToModify = (CPerson) execution.getArg().get( "personToModify" );
+          //Recibimos la persona a modificar y la guardamos en la variable de la clase
+            personToModify = (CPerson) execution.getArg().get( "personToModify" );
             
-            textboxId.setValue( personToModify.getId() );
-            textboxFirstName.setValue( personToModify.getFirstName() );
-            textboxLastName.setValue( personToModify.getLastName() );
+            //Cuando se esta creando una nueva persona, no hay personToModify. Es igual a nulo. Debemos verificar esto
             
-            if ( personToModify.getGender() == 0 ) {
+            if ( personToModify != null ) {
                 
-                dataModel.addToSelection( "Femenino" ); //Seleccionamos en el modelo al genero
+                textboxId.setValue( personToModify.getId() );
+                textboxFirstName.setValue( personToModify.getFirstName() );
+                textboxLastName.setValue( personToModify.getLastName() );
+                
+                if ( personToModify.getGender() == 0 ) {
+                    
+                    dataModel.addToSelection( "Femenino" ); //Seleccionamos en el modelo al genero
+                    
+                }
+                else {
+                    
+                    dataModel.addToSelection( "Masculino" ); //Seleccionamos en el modelo al genero
+                    
+                }
+                
+                dateboxBirdDate.setValue( java.sql.Date.valueOf( personToModify.getBirthDate().toString() ) );
+                
+                textboxComment.setValue( personToModify.getComment() );
                 
             }
-            else {
-                
-                dataModel.addToSelection( "Masculino" ); //Seleccionamos en el modelo al genero
-                
-            }
-           
-            dateboxBirdDate.setValue( java.sql.Date.valueOf( personToModify.getBirthDate().toString() ) );
             
-            textboxComment.setValue( personToModify.getComment() );
+            //Debemos guardar la referencia al componente que nos envia el controlador del manager .zul
+            
+            callerComponent = (Component) execution.getArg().get( "callerComponent" ); //Usamos un typecast al Component que es el padre de todos los elementos visuales de zk
             
         }
         
@@ -120,6 +138,37 @@ public class CDialogController extends SelectorComposer<Component> {
         //System.out.println( "Hello Accept" );
         
         windowPerson.detach();
+        
+        if ( personToModify != null ) {
+            
+            personToModify.setId( textboxId.getValue() );
+            personToModify.setFirstName( textboxFirstName.getValue() );
+            personToModify.setLastName( textboxLastName.getValue() );
+            personToModify.setGender( selectboxGender.getSelectedIndex() );
+            
+            //Los datebox de zk retornan el tipo Date de java y no un String como Textbox normales. Son clases hermanas pero el .getValue() retorna tipos distintos
+            //El .getTime() es un metodo de la clase Date de Java
+            personToModify.setBirthDate( new java.sql.Date( dateboxBirdDate.getValue().getTime() ).toLocalDate() );
+            
+            personToModify.setComment( textboxComment.getValue() );
+            
+            //Lanzamos el evento, retornando la persona a modificar
+            Events.echoEvent( new Event ( "onDialogFinished", callerComponent, personToModify ) ); //Suma importancia que los nombres de los eventos coincidan
+            
+        }
+        else {
+            
+            personToAdd = new CPerson(); //Usamos el constructor sin parametros
+            
+            //Usamos los métodos setter
+            personToAdd.setId( textboxId.getValue() );
+            personToAdd.setFirstName( textboxFirstName.getValue() );
+            personToAdd.setLastName( textboxLastName.getValue() );
+            personToAdd.setGender( selectboxGender.getSelectedIndex() );
+            personToAdd.setBirthDate( new java.sql.Date( dateboxBirdDate.getValue().getTime() ).toLocalDate() );
+            personToAdd.setComment( textboxComment.getValue() );
+            
+        }
         
     }
     
