@@ -59,7 +59,9 @@ public class CDatabaseConnection implements Serializable {
         
         try {
             
-            dbConnection.close();
+            dbConnection.close(); //Liberar recursos de la conexión
+            
+            dbConnection = null;
             
             return true;
             
