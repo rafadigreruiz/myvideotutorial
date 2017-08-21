@@ -1,6 +1,6 @@
 package org.test.zk.dialog;
 
-import org.test.zk.datamodel.CPerson;
+import org.test.zk.datamodel.TBLPerson;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -25,9 +25,9 @@ public class CDialogController extends SelectorComposer<Component> {
     
     protected Component callerComponent = null; //Variable de clase de tipo protegida
     
-    protected CPerson personToModify = null; //Guarda la persona a ser modificada
+    protected TBLPerson personToModify = null; //Guarda la persona a ser modificada
     
-    protected CPerson personToAdd = null; //Guarda la persona a ser agregada
+    protected TBLPerson personToAdd = null; //Guarda la persona a ser agregada
     
     @Wire
     Window windowPerson;
@@ -89,7 +89,7 @@ public class CDialogController extends SelectorComposer<Component> {
             final Execution execution = Executions.getCurrent();
             
             //Recibimos la persona a modificar y la guardamos en la variable de la clase
-            personToModify = (CPerson) execution.getArg().get( "personToModify" );
+            personToModify = (TBLPerson) execution.getArg().get( "personToModify" );
             
             //Cuando se esta creando una nueva persona, no hay personToModify. Es igual a nulo. Debemos verificar esto
             
@@ -158,7 +158,7 @@ public class CDialogController extends SelectorComposer<Component> {
         }
         else {
             
-            personToAdd = new CPerson(); //Usamos el constructor sin parametros
+            personToAdd = new TBLPerson(); //Usamos el constructor sin parametros
             
             //Usamos los métodos setter
             personToAdd.setId( textboxId.getValue() );

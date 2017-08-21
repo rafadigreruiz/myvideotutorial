@@ -17,14 +17,14 @@ public class CDatabaseConnection implements Serializable {
     
     protected Connection dbConnection = null;
     
-    public Connection getDbConnection() {
+    public Connection getDBConnection() {
         
         return dbConnection;
         
     }
 
     
-    public void setDbConnection( Connection dbConnection ) {
+    public void setDBConnection( Connection dbConnection ) {
         
         this.dbConnection = dbConnection;
         
