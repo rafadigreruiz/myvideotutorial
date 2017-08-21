@@ -40,8 +40,8 @@ public class TBLPersonDAO {
                     result.setCreatedAtDate( resultSet.getDate( "CreatedAtDate" ).toLocalDate() );
                     result.setCreatedAtTime( resultSet.getTime( "CreatedAtTime" ).toLocalTime() );
                     result.setUpdatedBy( resultSet.getString( "UpdatedBy" ) );
-                    result.setUpdatedAtDate( resultSet.getDate( "UpdatedAtDate" ).toLocalDate() != null ? resultSet.getDate( "UpdatedAtDate" ).toLocalDate() : null );
-                    result.setUpdatedAtTime( resultSet.getTime( "UpdatedAtTime" ).toLocalTime() != null ? resultSet.getTime( "UpdatedAtTime" ).toLocalTime() : null );
+                    result.setUpdatedAtDate( resultSet.getDate( "UpdatedAtDate" ) != null ? resultSet.getDate( "UpdatedAtDate" ).toLocalDate() : null );
+                    result.setUpdatedAtTime( resultSet.getTime( "UpdatedAtTime" ) != null ? resultSet.getTime( "UpdatedAtTime" ).toLocalTime() : null );
                     
                 }
                 
@@ -81,7 +81,9 @@ public class TBLPersonDAO {
                         + "', 'test', '" + LocalDate.now().toString() + "', '" + LocalTime.now().toString() + "', null, null, null)";
                 
                 statement.executeUpdate( strSQL );
-                databaseConnection.getDBConnection().commit();
+                
+                databaseConnection.getDBConnection().commit(); //Commit la transacción
+                
                 statement.close();
                 
                 bResult = true;
@@ -90,6 +92,21 @@ public class TBLPersonDAO {
             
         }
         catch ( Exception ex ) {
+            
+            if ( databaseConnection != null && databaseConnection.getDBConnection() != null ) {
+                
+                try {
+                    
+                    databaseConnection.getDBConnection().rollback();
+                    
+                }
+                catch ( Exception e ) {
+                    
+                    e.printStackTrace();
+                    
+                }
+                
+            }
             
             ex.printStackTrace();
             
@@ -102,6 +119,50 @@ public class TBLPersonDAO {
     public static boolean updateData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson ) {
         
         boolean bResult = false;
+        
+        try {
+            
+            if ( databaseConnection != null && databaseConnection.getDBConnection() != null ) {
+                
+                Statement statement = databaseConnection.getDBConnection().createStatement();
+                
+                final String strSQL = "Update TblPerson set ID='" + tblPerson.getId() + "', FirstName='" + tblPerson.getFirstName()
+                        + "', LastName='" + tblPerson.getLastName() +"', Gender='" + tblPerson.getGender() + "', BirthDate='"
+                        + tblPerson.getBirthDate().toString() + "', Comment='" + tblPerson.getComment() + "', UpdatedBy='Test01', "
+                        + "UpdatedAtDate='" + LocalDate.now().toString() + "', UpdatedAtTime='" + LocalTime.now().toString() + "'"
+                        + "where ID='" + tblPerson.getId() + "'";
+                
+                statement.executeUpdate( strSQL );
+                
+                databaseConnection.getDBConnection().commit(); //Commit la transacción
+                
+                statement.close();
+                
+                bResult = true;
+                
+            }
+            
+        }
+        catch ( Exception ex ) {
+            
+            if ( databaseConnection != null && databaseConnection.getDBConnection() != null ) {
+                
+                try {
+                    
+                    databaseConnection.getDBConnection().rollback();
+                    
+                }
+                catch ( Exception e ) {
+                    
+                    e.printStackTrace();
+                    
+                }
+                
+            }
+            
+            ex.printStackTrace();
+            
+        }
         
         return bResult;
         
@@ -120,7 +181,9 @@ public class TBLPersonDAO {
                 final String strSQL = "Delete from tblPerson where ID = '" + strId + "'";
                 
                 statement.executeUpdate( strSQL );
-                databaseConnection.getDBConnection().commit();
+                
+                databaseConnection.getDBConnection().commit(); //Commit la transacción
+                
                 statement.close();
                 
                 bResult = true;
@@ -166,8 +229,8 @@ public class TBLPersonDAO {
                     tblPerson.setCreatedAtDate( resultSet.getDate( "CreatedAtDate" ).toLocalDate() );
                     tblPerson.setCreatedAtTime( resultSet.getTime( "CreatedAtTime" ).toLocalTime() );
                     tblPerson.setUpdatedBy( resultSet.getString( "UpdatedBy" ) );
-                    tblPerson.setUpdatedAtDate( resultSet.getDate( "UpdatedAtDate" ).toLocalDate() != null ? resultSet.getDate( "UpdatedAtDate" ).toLocalDate() : null );
-                    tblPerson.setUpdatedAtTime( resultSet.getTime( "UpdatedAtTime" ).toLocalTime() != null ? resultSet.getTime( "UpdatedAtTime" ).toLocalTime() : null );
+                    tblPerson.setUpdatedAtDate( resultSet.getDate( "UpdatedAtDate" ) != null ? resultSet.getDate( "UpdatedAtDate" ).toLocalDate() : null );
+                    tblPerson.setUpdatedAtTime( resultSet.getTime( "UpdatedAtTime" ) != null ? resultSet.getTime( "UpdatedAtTime" ).toLocalTime() : null );
                     
                     result.add( tblPerson );
                     
