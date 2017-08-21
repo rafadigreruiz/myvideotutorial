@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.test.zk.constants.SystemConstants;
 import org.test.zk.dao.TBLPersonDAO;
 import org.test.zk.database.CDatabaseConnection;
 import org.test.zk.datamodel.TBLPerson;
@@ -30,8 +31,6 @@ import org.zkoss.zul.Window;
 public class CManagerController extends SelectorComposer<Component> {
 
     private static final long serialVersionUID = -1591648938821366036L;
-    
-    public static final String _DATABASE_CONNECTION_KEY = "databaseConnection";
     
     protected ListModelList<TBLPerson> dataModel = new ListModelList<TBLPerson>();
     
@@ -160,10 +159,10 @@ public class CManagerController extends SelectorComposer<Component> {
             
             Session currentSession = Sessions.getCurrent();
             
-            if ( currentSession.getAttribute( _DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
+            if ( currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
                 
                 //Recuperamos de la sesion la anterior conexion
-                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( _DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
+                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
                 
                 buttonConnectionToDB.setLabel( "Disconnect" ); //Indicamos en el boton que estamos conectados y listos para desconectarnos
                 
@@ -191,7 +190,7 @@ public class CManagerController extends SelectorComposer<Component> {
             if ( databaseConnection.makeConnectionToDatabase() ) {
                 
                 //Salvamos la conexion a la sesión actual del usuario, cada usuario/pestaña tiene su sesión
-                currentSession.setAttribute( _DATABASE_CONNECTION_KEY, databaseConnection ); //La sesion no es mas que un arreglo asociativo
+                currentSession.setAttribute( SystemConstants._DATABASE_CONNECTION_KEY, databaseConnection ); //La sesion no es mas que un arreglo asociativo
                 
                 buttonConnectionToDB.setLabel( "Disconnect" );
                 
@@ -219,7 +218,7 @@ public class CManagerController extends SelectorComposer<Component> {
                    
                    //Borramos la variable de sesión
                    //currentSession.setAttribute( _DATABASE_CONNECTION_KEY, null ); //La sesion no es mas que un arreglo asociativo
-                   currentSession.removeAttribute( _DATABASE_CONNECTION_KEY ); //La sesion no es mas que un arreglo asociativo
+                   currentSession.removeAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //La sesion no es mas que un arreglo asociativo
                    
                }
                else {
@@ -251,10 +250,10 @@ public class CManagerController extends SelectorComposer<Component> {
         
         Session currentSession = Sessions.getCurrent();
         
-        if ( currentSession.getAttribute( _DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
+        if ( currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
             
             //Recuperamos la conexion a bd de la sesion
-            databaseConnection = (CDatabaseConnection) currentSession.getAttribute( _DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
+            databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
             
             //Aquí vamos a cargar el modelo con la data de la bd
             List<TBLPerson> listData = TBLPersonDAO.searchData( databaseConnection );
