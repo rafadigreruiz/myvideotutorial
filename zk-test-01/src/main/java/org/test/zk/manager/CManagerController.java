@@ -1,10 +1,10 @@
 package org.test.zk.manager;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.test.zk.dao.TBLPersonDAO;
 import org.test.zk.database.CDatabaseConnection;
 import org.test.zk.datamodel.TBLPerson;
 import org.zkoss.zk.ui.Component;
@@ -130,7 +130,7 @@ public class CManagerController extends SelectorComposer<Component> {
             
             super.doAfterCompose( comp );
             
-            TBLPerson person01 = new TBLPerson( "1111", "Juan", "Rojas", 1, LocalDate.parse( "1990-01-01" ), "Sin comentarios" );
+            /*TBLPerson person01 = new TBLPerson( "1111", "Juan", "Rojas", 1, LocalDate.parse( "1990-01-01" ), "Sin comentarios" );
             TBLPerson person02 = new TBLPerson( "2222", "Jose", "Gonzales", 1, LocalDate.parse( "1960-11-01" ), "Sin comentarios" );
             TBLPerson person03 = new TBLPerson( "3333", "Jose", "Rodriguez", 1, LocalDate.parse( "1970-01-21" ), "Sin comentarios" );
             TBLPerson person04 = new TBLPerson( "4444", "Tomás", "Moreno", 1, LocalDate.parse( "1982-07-13" ), "Sin comentarios" );
@@ -140,7 +140,9 @@ public class CManagerController extends SelectorComposer<Component> {
             dataModel.add( person02 );
             dataModel.add( person03 );
             dataModel.add( person04 );
-            dataModel.add( person05 );
+            dataModel.add( person05 );*/
+            
+            
             
             //Activa la seleccion multiple de elementos. Util para operacion de borrado de multiples elementos a la vez
             dataModel.setMultiple( true );
@@ -347,13 +349,15 @@ public class CManagerController extends SelectorComposer<Component> {
             
             TBLPerson person = (TBLPerson) event.getData(); //Otra vez el typecast
             
-            System.out.println( person.getId() );
+            /*System.out.println( person.getId() );
             System.out.println( person.getFirstName() );
             System.out.println( person.getLastName() );
             System.out.println( person.getGender() );
-            System.out.println( person.getBirthDate() );
+            System.out.println( person.getBirthDate() );*/
             
             dataModel.add( person ); //Cuando se agrega al modelo un elemento, deberia actualizarse sola la lista
+            
+            TBLPersonDAO.insertData( databaseConnection, person );
             
         }
         

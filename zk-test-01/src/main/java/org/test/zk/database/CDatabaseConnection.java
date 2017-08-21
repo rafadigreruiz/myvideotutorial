@@ -32,6 +32,8 @@ public class CDatabaseConnection implements Serializable {
     
     public boolean makeConnectionToDatabase() {
         
+        boolean bResult = false;
+        
         try {
             
             Class.forName( "com.mysql.jdbc.Driver" );
@@ -42,37 +44,38 @@ public class CDatabaseConnection implements Serializable {
             
             dbConnection.setAutoCommit( false );
             
-            return true;
+            bResult = true;
             
         }
         catch ( Exception ex ) {
             
             ex.printStackTrace();
             
-            return false;
-            
         }
+        
+        return bResult;
         
     }
     
     public boolean closeConnectionToDatabase() {
         
+        boolean bResult = false;
         try {
             
             dbConnection.close(); //Liberar recursos de la conexión
             
             dbConnection = null;
             
-            return true;
+            bResult = true;
             
         }
         catch ( Exception ex ) {
             
             ex.printStackTrace();
             
-            return false;
-            
-        } 
+        }
+        
+        return bResult;
         
     }
     
