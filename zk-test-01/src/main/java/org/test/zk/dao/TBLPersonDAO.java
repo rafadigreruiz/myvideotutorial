@@ -116,7 +116,7 @@ public class TBLPersonDAO {
         
     }
     
-    public static boolean updateData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson ) {
+    public static boolean updateData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson, final String strID ) {
         
         boolean bResult = false;
         
@@ -130,7 +130,7 @@ public class TBLPersonDAO {
                         + "', LastName='" + tblPerson.getLastName() +"', Gender='" + tblPerson.getGender() + "', BirthDate='"
                         + tblPerson.getBirthDate().toString() + "', Comment='" + tblPerson.getComment() + "', UpdatedBy='Test01', "
                         + "UpdatedAtDate='" + LocalDate.now().toString() + "', UpdatedAtTime='" + LocalTime.now().toString() + "'"
-                        + "where ID='" + tblPerson.getId() + "'";
+                        + "where ID='" + strID + "'";
                 
                 statement.executeUpdate( strSQL );
                 
@@ -178,7 +178,7 @@ public class TBLPersonDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                final String strSQL = "Delete from tblPerson where ID = '" + strId + "'";
+                final String strSQL = "Delete from TblPerson where ID = '" + strId + "'";
                 
                 statement.executeUpdate( strSQL );
                 
@@ -192,6 +192,21 @@ public class TBLPersonDAO {
             
         }
         catch ( Exception ex ) {
+            
+            if ( databaseConnection != null && databaseConnection.getDBConnection() != null ) {
+                
+                try {
+                    
+                    databaseConnection.getDBConnection().rollback();
+                    
+                }
+                catch ( Exception e ) {
+                    
+                    e.printStackTrace();
+                    
+                }
+                
+            }
             
             ex.printStackTrace();
             

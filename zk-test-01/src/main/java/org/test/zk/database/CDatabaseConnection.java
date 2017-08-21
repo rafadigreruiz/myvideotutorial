@@ -9,11 +9,11 @@ public class CDatabaseConnection implements Serializable {
     
     private static final long serialVersionUID = 4223658996656423487L;
     
-    static final String _DB_URL = "jdbc:mysql://localhost/TestDB";
+    //static final String _DB_URL = "jdbc:mysql://localhost/TestDB";
     
     //Credenciales de la BD
-    static final String _USER = "root";
-    static final String _PASS = "";
+    //static final String _USER = "root";
+    //static final String _PASS = "";
     
     protected Connection dbConnection = null;
     
@@ -30,21 +30,27 @@ public class CDatabaseConnection implements Serializable {
         
     }
     
-    public boolean makeConnectionToDatabase() {
+    public boolean makeConnectionToDatabase( CDatabaseConnectionConfig databaseConnectionConfig ) {
         
         boolean bResult = false;
         
         try {
             
-            Class.forName( "com.mysql.jdbc.Driver" );
-            
-            dbConnection = DriverManager.getConnection( _DB_URL, _USER, _PASS );
-            
-            dbConnection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
-            
-            dbConnection.setAutoCommit( false );
-            
-            bResult = true;
+            if ( databaseConnectionConfig != null ) {
+                
+                Class.forName( databaseConnectionConfig.getDriver() );
+                
+                final String strDBURL = databaseConnectionConfig.getPrefix() + databaseConnectionConfig.getHost() + ":" + databaseConnectionConfig.getPort() + "/" + databaseConnectionConfig.getDatabase();
+                
+                dbConnection = DriverManager.getConnection( strDBURL, databaseConnectionConfig.getUser(), databaseConnectionConfig.getPassword() );
+                
+                dbConnection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
+                
+                dbConnection.setAutoCommit( false );
+                
+                bResult = true;
+                
+            }
             
         }
         catch ( Exception ex ) {

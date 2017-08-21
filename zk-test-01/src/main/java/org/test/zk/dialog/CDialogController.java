@@ -34,6 +34,8 @@ public class CDialogController extends SelectorComposer<Component> {
     
     protected TBLPerson personToAdd = null; //Guarda la persona a ser agregada
     
+    protected String strIdToModify = null;
+    
     @Wire
     Window windowPerson;
     
@@ -108,6 +110,9 @@ public class CDialogController extends SelectorComposer<Component> {
                     //Cargamos la data de la bd
                     personToModify = TBLPersonDAO.loadData( databaseConnection, (String) execution.getArg().get( "IdPerson" ) );
                     
+                    //Guardamos el ID de la persona a modificar
+                    strIdToModify = (String) execution.getArg().get( "IdPerson" );
+                    
                 }
                 
             }
@@ -176,7 +181,7 @@ public class CDialogController extends SelectorComposer<Component> {
             
             personToModify.setComment( textboxComment.getValue() );
             
-            TBLPersonDAO.updateData( databaseConnection, personToModify ); //Guardamos en la BD Actualizamos
+            TBLPersonDAO.updateData( databaseConnection, personToModify, strIdToModify ); //Guardamos en la BD Actualizamos
             
             //Lanzamos el evento, retornando la persona a modificar
             Events.echoEvent( new Event ( "onDialogFinished", callerComponent, personToModify ) ); //Suma importancia que los nombres de los eventos coincidan
