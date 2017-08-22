@@ -99,10 +99,10 @@ public class CDialogController extends SelectorComposer<Component> {
             
             Session currentSession = Sessions.getCurrent();
             
-            if ( currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
+            if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 
                 //Recuperamos la conexion a bd de la sesion
-                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
+                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
                 
                 //PersonToModify debe venir de la bd y no de la lista pasada como argumento
                 if ( execution.getArg().get( "IdPerson" ) instanceof String ) {

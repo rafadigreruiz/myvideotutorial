@@ -161,10 +161,10 @@ public class CManagerController extends SelectorComposer<Component> {
             
             Session currentSession = Sessions.getCurrent();
             
-            if ( currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
+            if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 
                 //Recuperamos de la sesion la anterior conexion
-                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
+                databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
                 
                 buttonConnectionToDB.setLabel( "Disconnect" ); //Indicamos en el boton que estamos conectados y listos para desconectarnos
                 
@@ -192,14 +192,14 @@ public class CManagerController extends SelectorComposer<Component> {
             CDatabaseConnectionConfig databaseConnectionConfig = new CDatabaseConnectionConfig();
             
             //En esta línea obtenemos la ruta completa del archivo de configuración incluido el /config/
-            String strRunningPath = Sessions.getCurrent().getWebApp().getRealPath( SystemConstants._WEB_INF_Dir ) + File.separator + SystemConstants._CONFIG_Dir + File.separator;
+            String strRunningPath = Sessions.getCurrent().getWebApp().getRealPath( SystemConstants._WEB_INF_Dir ) + File.separator + SystemConstants._Config_Dir + File.separator;
             
-            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._DATABASE_CONFIG_File ) ) {
+            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._Database_Connection_Config_File_Name ) ) {
                 
                 if ( databaseConnection.makeConnectionToDatabase( databaseConnectionConfig ) ) {
                     
                     //Salvamos la conexion a la sesión actual del usuario, cada usuario/pestaña tiene su sesión
-                    currentSession.setAttribute( SystemConstants._DATABASE_CONNECTION_KEY, databaseConnection ); //La sesion no es mas que un arreglo asociativo
+                    currentSession.setAttribute( SystemConstants._DB_Connection_Session_Key, databaseConnection ); //La sesion no es mas que un arreglo asociativo
                     
                     buttonConnectionToDB.setLabel( "Disconnect" );
                     
@@ -234,7 +234,7 @@ public class CManagerController extends SelectorComposer<Component> {
                    
                    //Borramos la variable de sesión
                    //currentSession.setAttribute( _DATABASE_CONNECTION_KEY, null ); //La sesion no es mas que un arreglo asociativo
-                   currentSession.removeAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //La sesion no es mas que un arreglo asociativo
+                   currentSession.removeAttribute( SystemConstants._DB_Connection_Session_Key ); //La sesion no es mas que un arreglo asociativo
                    
                }
                else {
@@ -266,10 +266,10 @@ public class CManagerController extends SelectorComposer<Component> {
         
         Session currentSession = Sessions.getCurrent();
         
-        if ( currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ) instanceof CDatabaseConnection ) {
+        if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
             
             //Recuperamos la conexion a bd de la sesion
-            databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DATABASE_CONNECTION_KEY ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
+            databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
             
             //Aquí vamos a cargar el modelo con la data de la bd
             List<TBLPerson> listData = TBLPersonDAO.searchData( databaseConnection );
