@@ -29,6 +29,9 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
+import commonlibs.commonclasses.ConstantsCommonClasses;
+import commonlibs.extendedlogger.CExtendedLogger;
+
 //Clase ManagerController
 public class CManagerController extends SelectorComposer<Component> {
 
@@ -194,9 +197,15 @@ public class CManagerController extends SelectorComposer<Component> {
             //En esta línea obtenemos la ruta completa del archivo de configuración incluido el /config/
             String strRunningPath = Sessions.getCurrent().getWebApp().getRealPath( SystemConstants._WEB_INF_Dir ) + File.separator + SystemConstants._Config_Dir + File.separator;
             
-            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._Database_Connection_Config_File_Name ) ) {
+            //Obtenemos el logger del objeto webApp
+            CExtendedLogger webAppLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
+            
+            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._Database_Connection_Config_File_Name, webAppLogger, null ) ) { //Vamos a pasarle null al CLanguage que ahorita no es relevante
                 
-                if ( databaseConnection.makeConnectionToDatabase( databaseConnectionConfig ) ) {
+                if ( databaseConnection.makeConnectionToDB( databaseConnectionConfig, webAppLogger, null ) ) {
+                    
+                    //Salvamos la configuración en el objeto databaseConnection
+                    //databaseConnection.setDBConnectionConfig( databaseConnectionConfig, webAppLogger, null );
                     
                     //Salvamos la conexion a la sesión actual del usuario, cada usuario/pestaña tiene su sesión
                     currentSession.setAttribute( SystemConstants._DB_Connection_Session_Key, databaseConnection ); //La sesion no es mas que un arreglo asociativo
@@ -223,8 +232,11 @@ public class CManagerController extends SelectorComposer<Component> {
         else {
             
             if ( databaseConnection != null ) {
+               
+               //Obtenemos el logger del objeto webApp
+               CExtendedLogger webAppLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
                 
-               if ( databaseConnection.closeConnectionToDatabase() ) {
+               if ( databaseConnection.closeConnectionToDB( webAppLogger, null ) ) {
                    
                    databaseConnection = null;
                    
