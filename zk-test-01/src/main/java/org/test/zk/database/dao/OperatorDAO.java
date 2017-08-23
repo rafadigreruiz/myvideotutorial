@@ -345,7 +345,7 @@ public class OperatorDAO {
         
     }
     
-    public TBLOperator checkValid( final CDatabaseConnection databaseConnection, final String strName, final String strPassword, CExtendedLogger localLogger, CLanguage localLanguage ) {
+    public static TBLOperator checkValid( final CDatabaseConnection databaseConnection, final String strName, final String strPassword, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         TBLOperator result = null;
         

@@ -164,7 +164,8 @@ public class CEditorController extends SelectorComposer<Component> {
         
         catch ( Exception e ) {
             
-            e.printStackTrace();
+            if ( controllerLogger != null )   
+                controllerLogger.logException( "-1021", e.getMessage(), e );
             
         }
        
