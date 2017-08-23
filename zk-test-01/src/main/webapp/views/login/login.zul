@@ -2,7 +2,7 @@
  <?link rel="stylesheet" type="text/css" href="resources/styles/login.style.css"?>
  <zk>
  
-   <window id="windowLogin" apply="org.test.zk.controllers.login.CLoginController" title="Login with your operator name and password" border="normal" hflex="min"> 
+   <window id="windowLogin" xmlns:w="client" apply="org.test.zk.controllers.login.CLoginController" title="Login with your operator name and password" border="normal" hflex="min"> 
  
      <vbox hflex="min" align="center">
          
@@ -22,7 +22,39 @@
                
              <label value="Operator :"/>
                  
-             <textbox constraint="no empty" id="textboxOperator" width="200px" />
+             <textbox id="textboxOperator" constraint="no empty" width="200px">
+             
+               <!--  <attribute w:name="doKeyPress_">
+             
+                 <![CDATA[
+                    function(evt)
+                    {
+                       //Obtener codigo (char)
+                       var charCode = evt.charCode;
+                       
+                       //Obtener codigo (key)
+                       var keyCode = evt.keyCode;
+                       
+                       //Capturar el codigo en formato caracter
+                       var value = String.fromCharCode(charCode);
+                       
+                       //Validar que no se acepten espacios en blanco
+                       
+                       if (value == " ")
+                           evt.stop();
+                       
+                       //Validar que solo se acepten digitos
+                       
+                       //if (!this._shallIgnore(evt, "0123456789"))
+                           //this.$doKeyPress_(evt);
+                    }
+                    
+                ]]>
+             
+               </attribute>
+               -->
+               
+             </textbox>
                  
            </row>
                
@@ -45,6 +77,8 @@
        <label id="labelForgotPassword" value="forgot you password?" style="cursor:hand;cursor:pointer"/> 
          
      </vbox>
+     
+     <timer id="timerKeepAliveSession" repeats="true" delay="120000"/>
  
    </window>
  

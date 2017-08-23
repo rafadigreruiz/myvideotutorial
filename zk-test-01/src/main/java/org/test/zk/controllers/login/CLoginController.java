@@ -16,6 +16,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
@@ -64,6 +65,31 @@ public class CLoginController extends SelectorComposer<Component> {
         
     }
 
+    /*@Listen( "onChange=#textboxOperator; onChange=#textboxPassword" )
+    public void onChangeTextbox( Event event ) {
+        
+        labelMessage.setValue( "" ); //Cuando cambie el texto en cualquiera de los dos textbox quitamos el mensaje.
+        
+    }*/
+    
+    @Listen( "onChanging=#textboxOperator; onChanging=#textboxPassword" )
+    public void onChangeTextbox( Event event ) {
+        
+        //Asi distinguimos cual componente en pantalla lanzo el evento. A veces es util para hacer una cosa u otra en el metodo
+        if ( event.getTarget().equals( textboxOperator ) ) {
+             
+            System.out.println( "Textbox operator");
+            
+        }
+        else if ( event.getTarget().equals( textboxPassword ) ) {
+             
+            System.out.println( "Textbox password");
+            
+        }
+        
+        labelMessage.setValue( "" ); //Cuando cambie el texto en cualquiera de los dos textbox quitamos el mensaje.
+        
+    }
     
     @Listen( "onClick=#buttonLogin" )
     public void onClickButtonLogin( Event event ) {
@@ -146,6 +172,15 @@ public class CLoginController extends SelectorComposer<Component> {
                 controllerLogger.logException( "-1021", e.getMessage(), e );
             
         }
+        
+    }
+    
+    @Listen( "onTimer=#timerKeepAliveSession" )
+    public void onTimer( Event event ) {
+        
+        //Este evento se ejecutara cada 120000 milisegundos
+        //Muestra un tablerito en la parte superior central de la pantalla
+        Clients.showNotification( "Automatic renewal of the session successful", "info", null, "before_center", 2000, true );
         
     }
     
