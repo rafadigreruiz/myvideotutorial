@@ -1,9 +1,9 @@
-package org.test.zk.dialog;
+package org.test.zk.controllers.person.editor;
 
 import org.test.zk.constants.SystemConstants;
-import org.test.zk.dao.TBLPersonDAO;
 import org.test.zk.database.CDatabaseConnection;
-import org.test.zk.datamodel.TBLPerson;
+import org.test.zk.database.dao.PersonDAO;
+import org.test.zk.database.datamodel.TBLPerson;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -21,8 +21,12 @@ import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import commonlibs.commonclasses.CLanguage;
+import commonlibs.commonclasses.ConstantsCommonClasses;
+import commonlibs.extendedlogger.CExtendedLogger;
 
-public class CDialogController extends SelectorComposer<Component> {
+//Editor
+public class CEditorController extends SelectorComposer<Component> {
 
     private static final long serialVersionUID = -8977563222707532143L;
     
@@ -77,6 +81,10 @@ public class CDialogController extends SelectorComposer<Component> {
     
     protected CDatabaseConnection databaseConnection = null;
     
+    protected CExtendedLogger controllerLogger = null;
+    
+    protected CLanguage controllerLanguage = null;
+    
     //Constructor
     @Override
     public void doAfterCompose( Component comp ) {
@@ -99,6 +107,9 @@ public class CDialogController extends SelectorComposer<Component> {
             
             Session currentSession = Sessions.getCurrent();
             
+            //Obtenemos el logger del objeto webApp y guardamos una referencia en la variable de clase controllerLogger
+            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
+            
             if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 
                 //Recuperamos la conexion a bd de la sesion
@@ -108,7 +119,7 @@ public class CDialogController extends SelectorComposer<Component> {
                 if ( execution.getArg().get( "IdPerson" ) instanceof String ) {
                     
                     //Cargamos la data de la bd
-                    personToModify = TBLPersonDAO.loadData( databaseConnection, (String) execution.getArg().get( "IdPerson" ) );
+                    personToModify = PersonDAO.loadData( databaseConnection, (String) execution.getArg().get( "IdPerson" ), controllerLogger, controllerLanguage );
                     
                     //Guardamos el ID de la persona a modificar
                     strIdToModify = (String) execution.getArg().get( "IdPerson" );
@@ -181,7 +192,7 @@ public class CDialogController extends SelectorComposer<Component> {
             
             personToModify.setComment( textboxComment.getValue() );
             
-            TBLPersonDAO.updateData( databaseConnection, personToModify, strIdToModify ); //Guardamos en la BD Actualizamos
+            PersonDAO.updateData( databaseConnection, personToModify, strIdToModify, controllerLogger, controllerLanguage ); //Guardamos en la BD Actualizamos
             
             //Lanzamos el evento, retornando la persona a modificar
             Events.echoEvent( new Event ( "onDialogFinished", callerComponent, personToModify ) ); //Suma importancia que los nombres de los eventos coincidan
@@ -199,7 +210,7 @@ public class CDialogController extends SelectorComposer<Component> {
             personToAdd.setBirthDate( new java.sql.Date( dateboxBirdDate.getValue().getTime() ).toLocalDate() );
             personToAdd.setComment( textboxComment.getValue() );
             
-            TBLPersonDAO.insertData( databaseConnection, personToAdd ); //Guardamos en la BD Insertamos
+            PersonDAO.insertData( databaseConnection, personToAdd, controllerLogger, controllerLanguage ); //Guardamos en la BD Insertamos
             
             //Lanzamos el evento, retornando la persona a agregar
             Events.echoEvent( new Event ( "onDialogFinished", callerComponent, personToAdd ) ); //Suma importancia que los nombres de los eventos coincidan

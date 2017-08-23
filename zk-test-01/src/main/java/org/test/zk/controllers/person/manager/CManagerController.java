@@ -1,4 +1,4 @@
-package org.test.zk.manager;
+package org.test.zk.controllers.person.manager;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.test.zk.constants.SystemConstants;
-import org.test.zk.dao.TBLPersonDAO;
 import org.test.zk.database.CDatabaseConnection;
 import org.test.zk.database.CDatabaseConnectionConfig;
-import org.test.zk.datamodel.TBLPerson;
+import org.test.zk.database.dao.PersonDAO;
+import org.test.zk.database.datamodel.TBLPerson;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
@@ -29,6 +29,7 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
+import commonlibs.commonclasses.CLanguage;
 import commonlibs.commonclasses.ConstantsCommonClasses;
 import commonlibs.extendedlogger.CExtendedLogger;
 
@@ -131,6 +132,10 @@ public class CManagerController extends SelectorComposer<Component> {
     
     protected CDatabaseConnection databaseConnection = null;
     
+    protected CExtendedLogger controllerLogger = null;
+    
+    protected CLanguage controllerLanguage = null;
+    
     //Constructor
     @Override
     public void doAfterCompose( Component comp ) {
@@ -163,6 +168,9 @@ public class CManagerController extends SelectorComposer<Component> {
             //Verificamos si el usuario esta conectado o no
             
             Session currentSession = Sessions.getCurrent();
+            
+            //Obtenemos el logger del objeto webApp y guardamos una referencia en la variable de clase controllerLogger
+            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
             
             if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 
@@ -197,12 +205,9 @@ public class CManagerController extends SelectorComposer<Component> {
             //En esta línea obtenemos la ruta completa del archivo de configuración incluido el /config/
             String strRunningPath = Sessions.getCurrent().getWebApp().getRealPath( SystemConstants._WEB_INF_Dir ) + File.separator + SystemConstants._Config_Dir + File.separator;
             
-            //Obtenemos el logger del objeto webApp
-            CExtendedLogger webAppLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
-            
-            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._Database_Connection_Config_File_Name, webAppLogger, null ) ) { //Vamos a pasarle null al CLanguage que ahorita no es relevante
+            if ( databaseConnectionConfig.loadConfig( strRunningPath + SystemConstants._Database_Connection_Config_File_Name, controllerLogger, controllerLanguage ) ) { //Vamos a pasarle null al CLanguage que ahorita no es relevante
                 
-                if ( databaseConnection.makeConnectionToDB( databaseConnectionConfig, webAppLogger, null ) ) {
+                if ( databaseConnection.makeConnectionToDB( databaseConnectionConfig, controllerLogger, controllerLanguage ) ) {
                     
                     //Salvamos la configuración en el objeto databaseConnection
                     //databaseConnection.setDBConnectionConfig( databaseConnectionConfig, webAppLogger, null );
@@ -232,11 +237,8 @@ public class CManagerController extends SelectorComposer<Component> {
         else {
             
             if ( databaseConnection != null ) {
-               
-               //Obtenemos el logger del objeto webApp
-               CExtendedLogger webAppLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
                 
-               if ( databaseConnection.closeConnectionToDB( webAppLogger, null ) ) {
+               if ( databaseConnection.closeConnectionToDB( controllerLogger, controllerLanguage ) ) {
                    
                    databaseConnection = null;
                    
@@ -284,7 +286,7 @@ public class CManagerController extends SelectorComposer<Component> {
             databaseConnection = (CDatabaseConnection) currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ); //Aqui vamos de nuevo con el typecast, tambien llamado conversion de tipos forzado
             
             //Aquí vamos a cargar el modelo con la data de la bd
-            List<TBLPerson> listData = TBLPersonDAO.searchData( databaseConnection );
+            List<TBLPerson> listData = PersonDAO.searchData( databaseConnection, controllerLogger, controllerLanguage );
             
             //Recreamos el modelo nuevamente
             dataModel = new ListModelList<TBLPerson>( listData ); //Creamos el modelo a partir de la lista que nos retorna la bd
@@ -307,7 +309,7 @@ public class CManagerController extends SelectorComposer<Component> {
         
         Map<String, Object> params = new HashMap<String, Object>();
         params.put( "callerComponent", listboxPersons ); //buttonAdd );
-        Window win = ( Window ) Executions.createComponents( "/dialog.zul", null, params ); //attach to page as root if parent is null
+        Window win = ( Window ) Executions.createComponents( "/views/person/editor/editor.zul", null, params ); //attach to page as root if parent is null
         
         win.doModal();
     }
@@ -326,7 +328,7 @@ public class CManagerController extends SelectorComposer<Component> {
             params.put( "IdPerson", person.getId() );
             params.put( "callerComponent", listboxPersons ); //buttonModify );
             
-            Window win = ( Window ) Executions.createComponents( "/dialog.zul", null, params ); //attach to page as root if parent is null
+            Window win = ( Window ) Executions.createComponents( "/views/person/editor/editor.zul", null, params ); //attach to page as root if parent is null
             
             win.doModal();
             
@@ -381,9 +383,9 @@ public class CManagerController extends SelectorComposer<Component> {
                             
                             //selectedItems.iterator().remove();
                             
-                            TBLPersonDAO.deleteData( databaseConnection, person.getId() );
-                            
                             dataModel.remove( person );
+                            
+                            PersonDAO.deleteData( databaseConnection, person.getId(), controllerLogger, controllerLanguage );
                             
                         }
                         

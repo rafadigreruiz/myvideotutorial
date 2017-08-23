@@ -1,4 +1,4 @@
-package org.test.zk.dao;
+package org.test.zk.database.dao;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.test.zk.database.CDatabaseConnection;
-import org.test.zk.datamodel.TBLPerson;
+import org.test.zk.database.datamodel.TBLPerson;
 
-public class TBLPersonDAO {
+import commonlibs.commonclasses.CLanguage;
+import commonlibs.extendedlogger.CExtendedLogger;
+
+public class PersonDAO {
     
-    public static TBLPerson loadData( final CDatabaseConnection databaseConnection, final String strId ) {
+    public static TBLPerson loadData( final CDatabaseConnection databaseConnection, final String strId, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         TBLPerson result = null;
         
@@ -56,7 +59,8 @@ public class TBLPersonDAO {
         }
         catch ( Exception ex ) {
             
-           ex.printStackTrace(); 
+            if ( localLogger != null )   
+                localLogger.logException( "-1021", ex.getMessage(), ex );  
             
         }
         
@@ -64,7 +68,7 @@ public class TBLPersonDAO {
         
     }
     
-    public static boolean insertData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson ) {
+    public static boolean insertData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         boolean bResult = false;
         
@@ -74,7 +78,7 @@ public class TBLPersonDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                final String strSQL = "Insert Into TblPerson(ID, FirstName, LastName, Gender, BirthDate, Comment, CreatedBy, "
+                final String strSQL = "Insert Into tblPerson(ID, FirstName, LastName, Gender, BirthDate, Comment, CreatedBy, "
                         + "CreatedAtDate, CreatedAtTime, UpdatedBy, UpdatedAtDate, UpdatedAtTime) values ('"
                         + tblPerson.getId() + "', '" + tblPerson.getFirstName() + "', '" + tblPerson.getLastName() + "', '"
                         + tblPerson.getGender() + "', '" + tblPerson.getBirthDate().toString() + "', '" + tblPerson.getComment()
@@ -102,13 +106,15 @@ public class TBLPersonDAO {
                 }
                 catch ( Exception e ) {
                     
-                    e.printStackTrace();
+                    if ( localLogger != null )   
+                        localLogger.logException( "-1021", e.getMessage(), e );  
                     
                 }
                 
             }
             
-            ex.printStackTrace();
+            if ( localLogger != null )   
+                localLogger.logException( "-1022", ex.getMessage(), ex );  
             
         }
         
@@ -116,7 +122,7 @@ public class TBLPersonDAO {
         
     }
     
-    public static boolean updateData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson, final String strID ) {
+    public static boolean updateData( final CDatabaseConnection databaseConnection, final TBLPerson tblPerson, final String strID, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         boolean bResult = false;
         
@@ -126,7 +132,7 @@ public class TBLPersonDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                final String strSQL = "Update TblPerson set ID='" + tblPerson.getId() + "', FirstName='" + tblPerson.getFirstName()
+                final String strSQL = "Update tblPerson set ID='" + tblPerson.getId() + "', FirstName='" + tblPerson.getFirstName()
                         + "', LastName='" + tblPerson.getLastName() +"', Gender='" + tblPerson.getGender() + "', BirthDate='"
                         + tblPerson.getBirthDate().toString() + "', Comment='" + tblPerson.getComment() + "', UpdatedBy='Test01', "
                         + "UpdatedAtDate='" + LocalDate.now().toString() + "', UpdatedAtTime='" + LocalTime.now().toString() + "'"
@@ -154,13 +160,15 @@ public class TBLPersonDAO {
                 }
                 catch ( Exception e ) {
                     
-                    e.printStackTrace();
+                    if ( localLogger != null )   
+                        localLogger.logException( "-1021", e.getMessage(), e );  
                     
                 }
                 
             }
             
-            ex.printStackTrace();
+            if ( localLogger != null )   
+                localLogger.logException( "-1022", ex.getMessage(), ex );  
             
         }
         
@@ -168,7 +176,7 @@ public class TBLPersonDAO {
         
     }
     
-    public static boolean deleteData( final CDatabaseConnection databaseConnection, final String strId ) {
+    public static boolean deleteData( final CDatabaseConnection databaseConnection, final String strId, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         boolean bResult = false;
         
@@ -178,7 +186,7 @@ public class TBLPersonDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                final String strSQL = "Delete from TblPerson where ID = '" + strId + "'";
+                final String strSQL = "Delete from tblPerson where ID = '" + strId + "'";
                 
                 statement.executeUpdate( strSQL );
                 
@@ -202,13 +210,15 @@ public class TBLPersonDAO {
                 }
                 catch ( Exception e ) {
                     
-                    e.printStackTrace();
+                    if ( localLogger != null )   
+                        localLogger.logException( "-1021", e.getMessage(), e );  
                     
                 }
                 
             }
             
-            ex.printStackTrace();
+            if ( localLogger != null )   
+                localLogger.logException( "-1022", ex.getMessage(), ex );  
             
         }
         
@@ -216,7 +226,7 @@ public class TBLPersonDAO {
         
     }
     
-    public static List<TBLPerson> searchData( final CDatabaseConnection databaseConnection ) {
+    public static List<TBLPerson> searchData( final CDatabaseConnection databaseConnection, CExtendedLogger localLogger, CLanguage localLanguage ) {
         
         List<TBLPerson> result = new ArrayList<TBLPerson>();
         
@@ -262,7 +272,8 @@ public class TBLPersonDAO {
         }
         catch ( Exception ex ) {
             
-           ex.printStackTrace(); 
+            if ( localLogger != null )   
+                localLogger.logException( "-1021", ex.getMessage(), ex );  
             
         }
         
