@@ -2,10 +2,8 @@
  <?link rel="stylesheet" type="text/css" href="resources/styles/login.style.css"?>
  <zk>
  
-   <window id="windowLogin" apply="org.test.zk.controllers.login.CLoginController" title="Login with you email and password" border="normal" hflex="min"> 
+   <window id="windowLogin" apply="org.test.zk.controllers.login.CLoginController" title="Login with your operator name and password" border="normal" hflex="min"> 
  
-     <style src="login.style.css"/>
-     
      <vbox hflex="min" align="center">
          
        <grid sclass="gridLayoutNoBorder" hflex="min">
@@ -22,7 +20,7 @@
                
            <row>
                
-             <label value="Username :"/>
+             <label value="Operator :"/>
                  
              <textbox constraint="no empty" id="textboxOperator" width="200px" />
                  
@@ -40,7 +38,7 @@
            
        </grid>
            
-       <label id="labelMessage" value="&#160;" />
+       <label id="labelMessage" sclass="warn" value="&#160;" />
            
        <button id="buttonLogin" label="Login" />
            
