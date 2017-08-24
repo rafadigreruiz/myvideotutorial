@@ -30,7 +30,6 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
 import commonlibs.commonclasses.CLanguage;
-import commonlibs.commonclasses.ConstantsCommonClasses;
 import commonlibs.extendedlogger.CExtendedLogger;
 
 //Clase ManagerController
@@ -170,7 +169,7 @@ public class CManagerController extends SelectorComposer<Component> {
             Session currentSession = Sessions.getCurrent();
             
             //Obtenemos el logger del objeto webApp y guardamos una referencia en la variable de clase controllerLogger
-            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
+            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( SystemConstants._Webapp_Logger_App_Attribute_Key );
             
             if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 
@@ -237,7 +236,7 @@ public class CManagerController extends SelectorComposer<Component> {
         else {
             
             if ( databaseConnection != null ) {
-                
+               
                if ( databaseConnection.closeConnectionToDB( controllerLogger, controllerLanguage ) ) {
                    
                    databaseConnection = null;
@@ -369,7 +368,7 @@ public class CManagerController extends SelectorComposer<Component> {
                
            }
            
-            Messagebox.show( "¿Seguro que desea eliminar los " + Integer.toString( selectedItems.size() ) + " registros?\n" + strBuffer, "Eliminar", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener() {
+            Messagebox.show( "Are you sure delete the next " + Integer.toString( selectedItems.size() ) + " records?\n" + strBuffer, "Delete", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener() {
                 
                 public void onEvent( Event evt ) throws InterruptedException {
                     

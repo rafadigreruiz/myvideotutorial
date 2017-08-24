@@ -22,7 +22,6 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 import commonlibs.commonclasses.CLanguage;
-import commonlibs.commonclasses.ConstantsCommonClasses;
 import commonlibs.extendedlogger.CExtendedLogger;
 
 //Editor
@@ -108,7 +107,7 @@ public class CEditorController extends SelectorComposer<Component> {
             Session currentSession = Sessions.getCurrent();
             
             //Obtenemos el logger del objeto webApp y guardamos una referencia en la variable de clase controllerLogger
-            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( ConstantsCommonClasses._Webapp_Logger_App_Attribute_Key );
+            controllerLogger = (CExtendedLogger) Sessions.getCurrent().getWebApp().getAttribute( SystemConstants._Webapp_Logger_App_Attribute_Key );
             
             if ( currentSession.getAttribute( SystemConstants._DB_Connection_Session_Key ) instanceof CDatabaseConnection ) {
                 

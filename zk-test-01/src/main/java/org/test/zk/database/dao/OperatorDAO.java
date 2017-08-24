@@ -33,6 +33,7 @@ public class OperatorDAO {
                     
                     result.setId( resultSet.getString( "id" ) );
                     result.setName( resultSet.getString( "Name" ) );
+                    result.setRole( resultSet.getString( "Role" ) );
                     result.setPassword( resultSet.getString( "Password" ) );
                     result.setComment( resultSet.getString( "Comment" ) );
                     
@@ -83,10 +84,10 @@ public class OperatorDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                final String strSQL = "Insert Into tblOperator(id, Name, Password, Comment, CreatedBy, "
+                final String strSQL = "Insert Into tblOperator(id, Name, Role, Password, Comment, CreatedBy, "
                         + "CreatedAtDate, CreatedAtTime, UpdatedBy, UpdatedAtDate, UpdatedAtTime, DisabledBy, DisabledAtDate, "
                         +"DisabledAtTime, LastLoginAtDate, LastLoginAtTime) values ('" + tblOperator.getId() + "', '" 
-                        + tblOperator.getName() + "', '" + tblOperator.getPassword() + "', '"
+                        + tblOperator.getName() + "', '" + tblOperator.getRole() + "', '" + tblOperator.getPassword() + "', '"
                         + tblOperator.getComment() + "', '" + "', 'test', '" + LocalDate.now().toString() + "', '" + LocalTime.now().toString()
                         + "', null, null, null, null, null, null, null, null)";
                 
@@ -139,7 +140,7 @@ public class OperatorDAO {
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
                 final String strSQL = "Update tblOperator set id='" + tblOperator.getId() + "', Name='" + tblOperator.getName()
-                        + "', Password='" + tblOperator.getPassword() + "', Comment='" + tblOperator.getComment() + "', UpdatedBy='"
+                        +"', Role='" + tblOperator.getRole() + "', Password='" + tblOperator.getPassword() + "', Comment='" + tblOperator.getComment() + "', UpdatedBy='"
                         + tblOperator.getUpdatedBy() + "', UpdatedAtDate='" + LocalDate.now().toString() + "', UpdatedAtTime='"
                         + LocalTime.now().toString() + "', DisabledBy='" + tblOperator.getDisabledBy() + "', DisabledAtDate="
                         + tblOperator.getDisabledBy() != null ? "'" + LocalDate.now().toString() + "'" : "null"
@@ -303,6 +304,7 @@ public class OperatorDAO {
                     
                     tblOperator.setId( resultSet.getString( "id" ) );
                     tblOperator.setName( resultSet.getString( "Name" ) );
+                    tblOperator.setRole( resultSet.getString( "Role" ) );
                     tblOperator.setPassword( resultSet.getString( "Password" ) );
                     tblOperator.setComment( resultSet.getString( "Comment" ) );
                     
@@ -355,7 +357,8 @@ public class OperatorDAO {
                 
                 Statement statement = databaseConnection.getDBConnection().createStatement();
                 
-                ResultSet resultSet = statement.executeQuery( "Select * from tblOperator where Name = '" + strName + "' and Password = '" + strPassword + "'" );
+                ResultSet resultSet = statement.executeQuery( "Select * from tblOperator where Name = '" + strName + "' and Password = '" + strPassword
+                        + "' And DisabledBy Is Null And DisabledAtDate Is Null And DisabledAtTime Is Null" );
                 
                 if ( resultSet.next() ) {
                     
@@ -363,6 +366,7 @@ public class OperatorDAO {
                     
                     result.setId( resultSet.getString( "id" ) );
                     result.setName( resultSet.getString( "Name" ) );
+                    result.setRole( resultSet.getString( "Role" ) );
                     result.setPassword( resultSet.getString( "Password" ) );
                     result.setComment( resultSet.getString( "Comment" ) );
                     
