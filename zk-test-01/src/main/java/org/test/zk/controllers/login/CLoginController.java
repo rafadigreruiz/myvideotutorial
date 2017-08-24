@@ -93,7 +93,7 @@ public class CLoginController extends SelectorComposer<Component> {
         
     }
     
-    @Listen( "onClick=#buttonLogin" )
+    @Listen( "onClick=#buttonLogin; onOK=#windowLogin" )
     public void onClickButtonLogin( Event event ) {
         
         try {
